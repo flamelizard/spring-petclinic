@@ -34,6 +34,8 @@ project {
 object BuildVet : BuildType({
     name = "Build_Vet"
 
+    artifactRules = "target/*jar"
+
     vcs {
         root(DslContext.settingsRoot)
     }
