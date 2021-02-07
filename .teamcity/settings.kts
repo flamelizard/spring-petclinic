@@ -1,6 +1,10 @@
-import jetbrains.buildServer.configs.kotlin.v2019_2.*
+import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
+import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.swabra
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.maven
+import jetbrains.buildServer.configs.kotlin.v2019_2.project
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.v2019_2.version
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -27,8 +31,7 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 version = "2020.1"
 
 project {
-
-    buildType(BuildVet)
+    buildType(cleanFiles(BuildVet))
 }
 
 object BuildVet : BuildType({
@@ -50,3 +53,14 @@ object BuildVet : BuildType({
         }
     }
 })
+
+// variable can hold a function since it is first-class citizen
+fun cleanFiles(buildType: BuildType): BuildType {
+    if (buildType.features.items.find { it.type == "swabra" } == null) {
+        buildType.features {
+            // clean changed files before next build
+            swabra { }
+        }
+    }
+    return buildType;
+}
