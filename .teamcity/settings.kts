@@ -37,13 +37,15 @@ project {
 object BuildVet : BuildType({
     name = "Build_Vet"
 
+    artifactRules = "target/*jar"
+
     vcs {
         root(DslContext.settingsRoot)
     }
 
     steps {
         maven {
-            goals = "clean test"
+            goals = "clean package"
             runnerArgs = "-Dmaven.test.failure.ignore=true"
         }
     }
